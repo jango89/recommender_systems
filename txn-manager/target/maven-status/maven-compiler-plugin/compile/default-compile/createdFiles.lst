@@ -1,0 +1,13 @@
+com/txn/datasource/DatasourceFactory.class
+com/txn/config/BeanCreationDef.class
+com/txn/datasource/DataSourceSupport$DataOperation.class
+com/txn/datasource/EntityReadStatus.class
+com/txn/datasource/DataSourceSupport.class
+com/txn/config/GenericUnManagedConfig.class
+com/txn/datasource/DatasourceFactory$1.class
+com/txn/config/GenericManagedConfig.class
+com/txn/datasource/DataSourceSupport$DataSourceType.class
+com/txn/datasource/elasticsearch/ElasticSearchDataSource.class
+com/txn/datasource/redis/RedisDataSource.class
+com/txn/datasource/elasticsearch/ElasticSearchDataSource$1.class
+com/txn/datasource/redis/RedisExtended.class

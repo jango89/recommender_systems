@@ -1,0 +1,46 @@
+server:
+  port: 8082
+spring:
+  profiles:
+    active: local
+  application:
+    name: GatewayInternational
+
+---
+    
+spring:
+  profiles: local 
+logging:
+  config: src/main/resources/logback-spring.xml
+  
+---
+
+spring:
+  profiles: development
+  boot:
+    admin:
+      url: http://10.0.1.102:8080
+  
+---
+
+spring:
+  profiles: testing
+  boot:
+    admin:
+      url: http://10.0.1.95:8080
+   
+---
+
+spring:
+  profiles: staging
+  boot:
+    admin:
+      url: http://10.0.1.93:8080
+      
+---
+
+spring:
+  profiles: production
+  boot:
+    admin:
+      url: http://10.112.119.15:18080

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+	<!-- Enable jmxConfiguration to allow dynamic level change through spring 
+		boot admin -->
+	<jmxConfigurator />
+
+
+
+	<!-- Standard console appender used in all environments. Upstart catches 
+		logs and stores in /var/log/upstart -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%-5level] [%t] %d %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+
+	<!-- Only com.propspace loggers are set to DEBUG level by default. Rest 
+		is INFO -->
+	<logger name="com.propspace" level="DEBUG" />
+
+
+	<!-- Configure logstash appenders for all environments with extra fields 
+		to identify profile and application -->
+	<springProfile name="development">
+		<appender name="stash"
+			class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+			<destination>10.0.1.126:4560</destination>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<customFields>{"appname":"GatewayInternational",
+					"profile":"development"}</customFields>
+			</encoder>
+		</appender>
+	</springProfile>
+
+	<springProfile name="testing">
+		<appender name="stash"
+			class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+			<destination>10.0.1.126:4560</destination>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<customFields>{"appname":"GatewayInternational",
+					"profile":"testing"}</customFields>
+			</encoder>
+		</appender>
+	</springProfile>
+
+	<springProfile name="staging">
+		<appender name="stash"
+			class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+			<destination>10.0.1.126:4560</destination>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<customFields>{"appname":"GatewayInternational",
+					"profile":"staging"}</customFields>
+			</encoder>
+		</appender>
+	</springProfile>
+
+	<springProfile name="production">
+		<appender name="stash"
+			class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+			<destination>10.112.119.15:4560</destination>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<customFields>{"appname":"GatewayInternational",
+					"profile":"production"}</customFields>
+			</encoder>
+		</appender>
+	</springProfile>
+
+
+
+	<!-- MetricsLogger will report application metrics only to logstash -->
+	<springProfile name="!local">
+		<logger name="MetricsLogger" level="TRACE" additivity="false">
+			<appender-ref ref="stash" />
+		</logger>
+	</springProfile>
+
+
+
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<springProfile name="!local">
+			<appender-ref ref="stash" />
+		</springProfile>
+	</root>
+</configuration>
