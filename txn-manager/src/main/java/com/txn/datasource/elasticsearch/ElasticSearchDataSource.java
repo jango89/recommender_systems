@@ -23,9 +23,6 @@ import org.springframework.data.elasticsearch.core.ResultsExtractor;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 
-/**
- * @author shahinkonadath
- */
 public class ElasticSearchDataSource {
     
     private static final Logger propLogger = LoggerFactory.getLogger(ElasticSearchDataSource.class);

@@ -38,7 +38,7 @@ public class GatewayWebAppConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Bean
 	public CacheManager cacheManager() throws Exception {
-		RedisCacheManager cacheManager = new RedisCacheManager(getRedisDataSource("mainRedisSource").getRedisTemplate());
+		RedisCacheManager cacheManager = new RedisCacheManager(getRedisDataSource("gateway").getRedisTemplate());
 		cacheManager.setTransactionAware(true);
 		cacheManager.afterPropertiesSet();
 		cacheManager.setUsePrefix(true);
