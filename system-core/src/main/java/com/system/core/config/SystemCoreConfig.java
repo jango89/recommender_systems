@@ -16,9 +16,9 @@ import com.txn.datasource.DatasourceFactory;
 import com.txn.datasource.elasticsearch.ElasticSearchDataSource;
 
 @Configuration
-@ComponentScan(basePackages = {""})
+@ComponentScan(basePackages = {"com.system.core.controller"})
 @PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties"), @PropertySource(value = "file:/usr/local/propspace/DATA-INF/PS-CORE/datasource.properties", ignoreResourceNotFound = true) })
-@EnableElasticsearchRepositories(basePackages = { "com.propspace.intl.core.repository.nosql", "com.propspace.intl.core.calendar.repository.nosql" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
+@EnableElasticsearchRepositories(basePackages = { "com.system.core.repository.nosql" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
 @EnableCaching
 public class SystemCoreConfig {
 
