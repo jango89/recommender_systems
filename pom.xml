@@ -51,6 +51,11 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<repositories>		
+	<repositories>
+	<repository>
+	    <id>spring-snapshot</id>
+	    <name>Spring Maven SNAPSHOT Repository</name>
+	    <url>http://repo.springsource.org/libs-snapshot</url>
+	</repository>
 	</repositories>
 </project>

@@ -16,9 +16,12 @@ import com.txn.datasource.DatasourceFactory;
 import com.txn.datasource.elasticsearch.ElasticSearchDataSource;
 
 @Configuration
-@ComponentScan(basePackages = {"com.system.core.controller"})
-@PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties"), @PropertySource(value = "file:/usr/local/propspace/DATA-INF/PS-CORE/datasource.properties", ignoreResourceNotFound = true) })
-@EnableElasticsearchRepositories(basePackages = { "com.system.core.repository.nosql" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
+@ComponentScan(basePackages = { "com.system.core.controller", "com.system.core.entity", "com.system.core.repository",
+		"com.system.core.crawler.support" })
+@PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties"),
+		@PropertySource(value = "file:/usr/local/propspace/DATA-INF/PS-CORE/datasource.properties", ignoreResourceNotFound = true) })
+@EnableElasticsearchRepositories(basePackages = {
+		"com.system.core.repository.nosql" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
 @EnableCaching
 public class SystemCoreConfig {
 
@@ -30,8 +33,10 @@ public class SystemCoreConfig {
 		return getElasticsearchTemplateBean(env, "core");
 	}
 
-	private ElasticsearchTemplate getElasticsearchTemplateBean(Environment environment, String dsName) throws Exception {
-		return (ElasticsearchTemplate) ((ElasticSearchDataSource)DatasourceFactory.getDataSource(DataSourceType.ELASTIC_SEARCH, dsName, env)).getElasticsearchTemplate();
+	private ElasticsearchTemplate getElasticsearchTemplateBean(Environment environment, String dsName)
+			throws Exception {
+		return (ElasticsearchTemplate) ((ElasticSearchDataSource) DatasourceFactory
+				.getDataSource(DataSourceType.ELASTIC_SEARCH, dsName, env)).getElasticsearchTemplate();
 	}
 
 }// End of the class

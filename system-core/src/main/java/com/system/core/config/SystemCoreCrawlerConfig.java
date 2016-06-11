@@ -2,6 +2,7 @@ package com.system.core.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -14,10 +15,11 @@ import com.txn.datasource.DatasourceFactory;
 import com.txn.datasource.elasticsearch.ElasticSearchDataSource;
 
 @Configuration
-@PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties"),
-		@PropertySource(value = "file:/usr/local/propspace/DATA-INF/PS-CORE/datasource.properties", ignoreResourceNotFound = true) })
+@PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties") })
+@ComponentScan(basePackages = { "com.system.core.controller", "com.system.core.entity", "com.system.core.repository",
+		"com.system.core.crawler.support" })
 @EnableElasticsearchRepositories(basePackages = {
-		"com.system.core.repository.nosql" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
+		"com.system.core.repository" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
 public class SystemCoreCrawlerConfig {
 
 	@Autowired

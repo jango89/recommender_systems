@@ -1,14 +1,14 @@
-package com.system.core.craweler.support;
+package com.system.core.crawler.support;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
@@ -21,26 +21,27 @@ public class NlpSentenceUtil {
 	private static final String SENT_BIN_LIB = "/en-sent.bin";
 	private final NlpParserUtil nlpParserUtil;
 
-	public NlpSentenceUtil(Environment environment) {
-		nlpParserUtil = new NlpParserUtil(environment);
+	public NlpSentenceUtil() {
+		nlpParserUtil = new NlpParserUtil();
 	}
 
-	public void generateNlpTokensForCourse(String parsedText) throws InvalidFormatException, IOException {
+	public Set<String> generateNlpTokens(String parsedText) throws InvalidFormatException, IOException {
 		InputStream modelIn = getClass().getResourceAsStream(SENT_BIN_LIB);
 		SentenceModel sentenceModel = new SentenceModel(modelIn);
 		SentenceDetectorME sentenceDetectorME = new SentenceDetectorME(sentenceModel);
 		String[] sentences = sentenceDetectorME.sentDetect(parsedText);
-		generateSentencesWithSemesterTokens(sentences);
+		return generateSentencesWithSemesterTokens(sentences);
 	}
 
-	private void generateSentencesWithSemesterTokens(String[] sentences) {
+	private Set<String> generateSentencesWithSemesterTokens(String[] sentences) {
 		List<String> sentenceList = Arrays.asList(sentences);
 		List<Integer> indexesOfSemester = sentenceList.stream().filter(sentence -> sentence.contains(SEMESTER))
 				.map(sentence -> sentenceList.indexOf(sentence)).collect(Collectors.toList());
 		List<String> firstSemList = sentenceList.subList(indexesOfSemester.get(0), indexesOfSemester.get(1));
 		List<String> secondSemList = sentenceList.subList(indexesOfSemester.get(1), sentenceList.size() - 1);
 		LOGGER.info("Successfully generated first and second semester course details");
-		nlpParserUtil.generateParsedTokens(firstSemList, "first semester");
-		nlpParserUtil.generateParsedTokens(secondSemList, "second semester");
+		Set<String> courseKeywords = nlpParserUtil.generateParsedTokens(firstSemList, "first semester");
+		courseKeywords.addAll(nlpParserUtil.generateParsedTokens(secondSemList, "second semester"));
+		return courseKeywords;
 	}
 }

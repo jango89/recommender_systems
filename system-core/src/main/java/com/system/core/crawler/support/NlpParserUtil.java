@@ -1,14 +1,16 @@
-package com.system.core.craweler.support;
+package com.system.core.crawler.support;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
@@ -24,42 +26,40 @@ public class NlpParserUtil {
 	private static final String NOUN_ABR = "N";
 	private final ParserModel parserModel;
 	private static final List<String> BLACKLISTED = Lists.newArrayList("•");
-	private static final String CRAWLER_PROGRAM = "crawler.program";
-	private static final String CRAWLER_COURSE = "crawler.course";
-	private Environment environment;
 
-	public NlpParserUtil(Environment environment) {
+	public NlpParserUtil() {
 		try {
 			InputStream is = getClass().getResourceAsStream(PARSE_BIN);
 			parserModel = new ParserModel(is);
-			this.environment = environment;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void generateParsedTokens(List<String> sentences, String message) {
+	public Set<String> generateParsedTokens(List<String> sentences, String message) {
 		LOGGER.info(message);
 		Parser parser = ParserFactory.create(parserModel);
+		Set<String> courseKeywords = Sets.newHashSet();
 		sentences.stream().map(sentence -> {
-			Arrays.asList(ParserTool.parseLine(sentence, parser, 1)).stream().map(this::parseChildrenNodes).count();
+			Arrays.asList(ParserTool.parseLine(sentence, parser, 1)).stream()
+					.map(parse -> parseChildrenNodes(parse, courseKeywords)).count();
 			return sentence;
 		}).count();
+		return courseKeywords;
 	}
 
-	private Parse parseChildrenNodes(Parse parse) {
+	private Set<String> parseChildrenNodes(Parse parse, Set<String> courseKeywords) {
 		if (parse.getType().equals(TOP_NODE)) {
-			Arrays.asList(parse.getHead().getChildren()).stream()
+			courseKeywords.addAll(Arrays.asList(parse.getHead().getChildren()).stream()
 					.filter(parseval -> parseval.getParent().getType().startsWith(NOUN_ABR))
 					.filter(parseval -> !BLACKLISTED.contains(parseval.toString())).map(this::parseNounChildrenNodes)
-					.count();
+					.collect(Collectors.toSet()));
 		}
-		return parse;
+		return courseKeywords;
 	}
 
-	private Parse parseNounChildrenNodes(Parse parse) {
-		LOGGER.info(parse.toString());
-		return parse;
+	private String parseNounChildrenNodes(Parse parse) {
+		return parse.toString();
 	}
 
 }
