@@ -17,7 +17,7 @@ import com.txn.datasource.elasticsearch.ElasticSearchDataSource;
 
 @Configuration
 @ComponentScan(basePackages = { "com.system.core.controller", "com.system.core.entity", "com.system.core.repository",
-		"com.system.core.crawler.support" })
+		"com.system.core.crawler.support", "com.system.core.service" })
 @PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties"),
 		@PropertySource(value = "file:/usr/local/propspace/DATA-INF/PS-CORE/datasource.properties", ignoreResourceNotFound = true) })
 @EnableElasticsearchRepositories(basePackages = {

@@ -17,7 +17,7 @@ import com.txn.datasource.elasticsearch.ElasticSearchDataSource;
 @Configuration
 @PropertySources({ @PropertySource("classpath:DATA-INF/PS-CORE/datasource.properties") })
 @ComponentScan(basePackages = { "com.system.core.controller", "com.system.core.entity", "com.system.core.repository",
-		"com.system.core.crawler.support" })
+		"com.system.core.crawler.support", "com.system.core.service" })
 @EnableElasticsearchRepositories(basePackages = {
 		"com.system.core.repository" }, elasticsearchTemplateRef = "coreElasticSearchTemplate")
 public class SystemCoreCrawlerConfig {

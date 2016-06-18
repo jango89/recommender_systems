@@ -26,11 +26,21 @@ public class NlpSentenceUtil {
 	}
 
 	public Set<String> generateNlpTokens(String parsedText) throws InvalidFormatException, IOException {
+		String[] sentences = retrieveSentences(parsedText);
+		return generateSentencesWithSemesterTokens(sentences);
+	}
+
+	public Set<String> generateNlpTokensForProfilePdf(String parsedText) throws InvalidFormatException, IOException {
+		String[] sentences = retrieveSentences(parsedText);
+		return generateSentences(sentences);
+	}
+
+	private String[] retrieveSentences(String parsedText) throws InvalidFormatException, IOException {
 		InputStream modelIn = getClass().getResourceAsStream(SENT_BIN_LIB);
 		SentenceModel sentenceModel = new SentenceModel(modelIn);
 		SentenceDetectorME sentenceDetectorME = new SentenceDetectorME(sentenceModel);
 		String[] sentences = sentenceDetectorME.sentDetect(parsedText);
-		return generateSentencesWithSemesterTokens(sentences);
+		return sentences;
 	}
 
 	private Set<String> generateSentencesWithSemesterTokens(String[] sentences) {
@@ -43,5 +53,11 @@ public class NlpSentenceUtil {
 		Set<String> courseKeywords = nlpParserUtil.generateParsedTokens(firstSemList, "first semester");
 		courseKeywords.addAll(nlpParserUtil.generateParsedTokens(secondSemList, "second semester"));
 		return courseKeywords;
+	}
+
+	private Set<String> generateSentences(String[] sentences) {
+		List<String> sentenceList = Arrays.asList(sentences);
+		Set<String> keywords = nlpParserUtil.generateParsedTokens(sentenceList, "Profile pdf");
+		return keywords;
 	}
 }

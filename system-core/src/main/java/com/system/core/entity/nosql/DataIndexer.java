@@ -17,6 +17,10 @@ public class DataIndexer {
 	private String courseName;
 	private String programeName;
 
+	public DataIndexer() {
+		super();
+	}
+
 	public DataIndexer(Set<String> courseKeywords, String courseName, String programeName) {
 		super();
 		this.courseKeywords = courseKeywords;

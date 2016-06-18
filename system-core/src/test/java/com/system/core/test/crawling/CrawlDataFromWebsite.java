@@ -1,6 +1,7 @@
 package com.system.core.test.crawling;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,15 +48,19 @@ public class CrawlDataFromWebsite {
 	}
 
 	@Test
+	// @Ignore
 	public void getDataFromWebsite() throws InvalidFormatException, IOException {
 		String courseDetails = pdfReaderUtil.getPdfStringData(crawlerSiteDetail);
 		Set<String> courseKeywords = nlpSentenceUtil.generateNlpTokens(courseDetails);
+		courseKeywords.addAll(Arrays.asList(environment.getProperty(CRAWLER_COURSE).split(" ")));
+		courseKeywords.addAll(Arrays.asList(environment.getProperty(CRAWLER_PROGRAM).split(" ")));
 		DataIndexer dataIndexer = new DataIndexer(courseKeywords, environment.getProperty(CRAWLER_COURSE),
 				environment.getProperty(CRAWLER_PROGRAM));
 		dataIndexer = dataIndexerService.saveData(dataIndexer);
 	}
 
 	@Ignore
+	// @Test
 	public void deleteAllCrawledCourse() {
 		dataIndexerService.resetAllData();
 	}
