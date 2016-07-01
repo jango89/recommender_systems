@@ -18,6 +18,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import com.system.core.response.GraphResponse;
 import com.system.core.service.SearchInterface;
+import com.system.core.service.UserInfoService;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
@@ -27,10 +28,14 @@ public class UploadController {
 	@Autowired
 	private SearchInterface searchInterface;
 
+	@Autowired
+	private UserInfoService userInfoService;
+
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object upload(@RequestBody MultipartFile file, HttpServletRequest httpreq) {
 		file = ((StandardMultipartHttpServletRequest) httpreq).getFile("post[file]");
 		List<GraphResponse> result = searchInterface.searchByUploadedPdf(file);
+		userInfoService.saveUserInfo(httpreq);
 		return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
 	}
 }
