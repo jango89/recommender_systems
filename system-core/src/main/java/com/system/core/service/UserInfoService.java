@@ -21,7 +21,8 @@ public class UserInfoService {
 		this.userInfoRepository = userInfoRepository;
 	}
 
-	public void saveUserInfo(HttpServletRequest request) {
+	public void saveUserInfo(HttpServletRequest request, String courseName, Float score, float secondsTaken,
+			String searchVia) {
 		String ipAddress = request.getHeader("X-FORWARDED-FOR");
 		if (StringUtils.isBlank(ipAddress)) {
 			ipAddress = request.getRemoteAddr();
@@ -32,6 +33,11 @@ public class UserInfoService {
 		userInfo.setMonth(localDate.getMonth().toString());
 		userInfo.setYear(String.valueOf(localDate.getYear()));
 		userInfo.setCurrentTime(System.currentTimeMillis());
+		userInfo.setCourseName(courseName);
+		userInfo.setDay(String.valueOf(localDate.getDayOfMonth()));
+		userInfo.setScore(score.doubleValue());
+		userInfo.setTimeInSeconds(secondsTaken);
+		userInfo.setSearchVia(searchVia);
 		userInfoRepository.save(userInfo);
 	}
 

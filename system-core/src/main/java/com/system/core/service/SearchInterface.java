@@ -9,4 +9,6 @@ import com.system.core.response.GraphResponse;
 public interface SearchInterface {
 
 	List<GraphResponse> searchByUploadedPdf(MultipartFile multiPartFile);
+
+	List<GraphResponse> searchByUploadedText(String stringValue);
 }

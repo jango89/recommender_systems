@@ -35,6 +35,11 @@ public class NlpSentenceUtil {
 		return generateSentences(sentences);
 	}
 
+	public Set<String> generateNlpTokensForNormalSearch(String parsedText) throws InvalidFormatException, IOException {
+		String[] sentences = retrieveSentences(parsedText);
+		return generateSentencesForNormalSearch(sentences);
+	}
+
 	private String[] retrieveSentences(String parsedText) throws InvalidFormatException, IOException {
 		InputStream modelIn = getClass().getResourceAsStream(SENT_BIN_LIB);
 		SentenceModel sentenceModel = new SentenceModel(modelIn);
@@ -58,6 +63,12 @@ public class NlpSentenceUtil {
 	private Set<String> generateSentences(String[] sentences) {
 		List<String> sentenceList = Arrays.asList(sentences);
 		Set<String> keywords = nlpParserUtil.generateParsedTokens(sentenceList, "Profile pdf");
+		return keywords;
+	}
+
+	private Set<String> generateSentencesForNormalSearch(String[] sentences) {
+		List<String> sentenceList = Arrays.asList(sentences);
+		Set<String> keywords = nlpParserUtil.generateParsedTokensForNormalSearches(sentenceList, "Normal searches");
 		return keywords;
 	}
 }

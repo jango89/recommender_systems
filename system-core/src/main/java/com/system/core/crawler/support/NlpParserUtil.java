@@ -48,6 +48,24 @@ public class NlpParserUtil {
 		return courseKeywords;
 	}
 
+	public Set<String> generateParsedTokensForNormalSearches(List<String> sentences, String message) {
+		LOGGER.info(message);
+		Parser parser = ParserFactory.create(parserModel);
+		Set<String> courseKeywords = Sets.newHashSet();
+		sentences.stream().map(sentence -> {
+			Arrays.asList(ParserTool.parseLine(sentence, parser, 1)).stream()
+					.map(parse -> parseChildrenNodesForNormalSearch(parse, courseKeywords)).count();
+			return sentence;
+		}).count();
+		return courseKeywords;
+	}
+
+	private Set<String> parseChildrenNodesForNormalSearch(Parse parse, Set<String> courseKeywords) {
+		courseKeywords.addAll(Arrays.asList(parse.getHead().getChildren()).stream().map(this::parseNounChildrenNodes)
+				.collect(Collectors.toSet()));
+		return courseKeywords;
+	}
+
 	private Set<String> parseChildrenNodes(Parse parse, Set<String> courseKeywords) {
 		if (parse.getType().equals(TOP_NODE)) {
 			courseKeywords.addAll(Arrays.asList(parse.getHead().getChildren()).stream()

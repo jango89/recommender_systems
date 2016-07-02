@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -19,6 +18,7 @@ import com.system.core.crawler.support.DataIndexerService;
 import com.system.core.crawler.support.NlpSentenceUtil;
 import com.system.core.crawler.support.PdfReaderUtil;
 import com.system.core.entity.nosql.DataIndexer;
+import com.system.core.repository.nosql.UserInfoRepository;
 
 import opennlp.tools.util.InvalidFormatException;
 
@@ -37,6 +37,8 @@ public class CrawlDataFromWebsite {
 
 	@Autowired
 	private DataIndexerService dataIndexerService;
+	@Autowired
+	private UserInfoRepository userInfoRepository;
 	private NlpSentenceUtil nlpSentenceUtil;
 	private PdfReaderUtil pdfReaderUtil;
 
@@ -47,8 +49,8 @@ public class CrawlDataFromWebsite {
 		pdfReaderUtil = new PdfReaderUtil();
 	}
 
-	@Test
-	// @Ignore
+	// @Test
+	@Ignore
 	public void getDataFromWebsite() throws InvalidFormatException, IOException {
 		String courseDetails = pdfReaderUtil.getPdfStringData(crawlerSiteDetail);
 		Set<String> courseKeywords = nlpSentenceUtil.generateNlpTokens(courseDetails);
@@ -63,6 +65,12 @@ public class CrawlDataFromWebsite {
 	// @Test
 	public void deleteAllCrawledCourse() {
 		dataIndexerService.resetAllData();
+	}
+
+	@Ignore
+	// @Test
+	public void deleteAllUserInfo() {
+		userInfoRepository.deleteAll();
 	}
 
 }

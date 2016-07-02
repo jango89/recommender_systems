@@ -73,4 +73,23 @@ public class SearchService implements SearchInterface {
 		return graphResponseList;
 	}
 
+	@Override
+	public List<GraphResponse> searchByUploadedText(String stringValue) {
+		Set<String> pdfKeywords;
+		try {
+			pdfKeywords = nlpSentenceUtil.generateNlpTokensForNormalSearch(stringValue);
+		} catch (IOException e) {
+			throw new RuntimeException("Error happened while reading the pdf");
+		}
+		pdfKeywords = pdfKeywords.stream().map(keyword -> keyword.toLowerCase()).collect(Collectors.toSet());
+		SearchQuery searchQuery = searchUtil.generateSearchQuery(pdfKeywords);
+		SearchHits hits = esTemplate.query(searchQuery, new ResultsExtractor<SearchHits>() {
+			public SearchHits extract(SearchResponse searchResponse) {
+				return searchResponse.getHits();
+			}
+		});
+		List<GraphResponse> graphResponseList = generateGraphResponseList(hits);
+		return graphResponseList;
+	}
+
 }
