@@ -69,6 +69,7 @@ public class NlpSentenceUtil {
 	private Set<String> generateSentencesForNormalSearch(String[] sentences) {
 		List<String> sentenceList = Arrays.asList(sentences);
 		Set<String> keywords = nlpParserUtil.generateParsedTokensForNormalSearches(sentenceList, "Normal searches");
+		keywords = keywords.stream().map(word -> word.trim().replaceAll(",", "")).collect(Collectors.toSet());
 		return keywords;
 	}
 }
